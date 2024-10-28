@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript: Simple Book Borrowing Program</title>
+
+    <!-- You are tasked with creating a program that allows a user to borrow books from a library. 
+    The program should have a class for a person, which has a name, age, and an array to keep 
+    track of borrowed books. 
+
+    There should also be a class for a book, which has book id, title, author, ISBN number, and a 
+    Boolean flag to indicate whether it is borrowed or not. The program should initialize with an 
+    array of book objects. 
+
+    When the program is run, the user should be prompted to select a book to borrow from a list of 
+    available books. If the user selects an invalid option, they should be prompted to try again. 
+
+    After the user borrows a book, they should be asked if they want to borrow another book. If 
+    they do, the list of available books should be displayed again. 
+
+    This process should continue until the user decides not to borrow any more books. Finally, 
+    the program should display a list of all the books the user has borrowed.  -->
+
+    <script>
+
+        class Book{
+            constructor(id, title, author, isbn){
+                this.id = id;
+                this.title = title;
+                this.author = author;
+                this.isbn = isbn;
+                this.isBorrowed = false;
+            }
+
+            borrow(){
+                this.isBorrowed = true;
+            }
+
+            returnBook(){
+                this.isBorrowed = false;
+            }
+        }
+
+        class Person{
+            constructor(name){
+                this.name = name;
+                this.borrowedBooks = [];
+            }
+
+            borrowBook(book){
+                this.borrowedBooks.push(book);
+            }
+/* 
+            returnBook(book){
+                ...
+            } */
+        }
+
+        const books = [
+            new Book("HK901.4", "Harry Potter and the Philosopher's Stone", "J.K. Rowling", "9781408855652"),
+            new Book("JD806.1", "The Catcher in the Rye", "J.D. Saliinger", "9780241950432"),
+            new Book("HL125.3", "To Kill a Mockingbird", "Harper Lee", "9780099419785"),
+            new Book("GO474.3", "1984", "George Orwell", "9781328869333"),
+            new Book("JA978.1", "Pride and Prejudice", "Jane Austen", "9780451530783"),
+            new Book("SF354.7", "The Great Gatsby", "F. Scoot Fitzgerald", "9780593201060")
+        ];
+
+        const person1 = new Person("John");
+
+        let continueBorrowing = "y";
+
+        while(continueBorrowing == "y"){
+            const availableBooks = books.filter(function(book){return !book.isBorrowed});
+            if(availableBooks.length === 0){
+                alert("No more books available for borrowing.");
+                break;
+            }
+
+            const bookList = availableBooks.map(function(book, index){
+                return `${index + 1}. ${book.title} - ${book.author}`;
+            }).join("\n");
+
+            const selectedBookIndex = parseInt(
+                prompt(`Select the book you wish to borrow by entering the corresponding number:\n\n${bookList}`))
+
+                
+            if(isNaN(selectedBookIndex) || selectedBookIndex < 1 || selectedBookIndex > availableBooks.length){
+                alert("Invalid selection, pls try again.");
+                continue;
+            }
+
+            const selectedBook = availableBooks[selectedBookIndex - 1];
+
+            selectedBook.borrow();
+            person1.borrowBook(selectedBook);
+
+            do{
+                continueBorrowing = prompt("Do you want to borrow another book? (Y/N)".trim().toLowerCase());
+                if(continueBorrowing != 'y' && continueBorrowing != 'n'){
+                    alert("Invalid. Pls enter (Y/N)");
+                }
+            }
+            while(continueBorrowing != 'y' && continueBorrowing != 'n');
+
+            let borrowedBooklist = "";
+
+            for(let book of person1.borrowedBooks){
+                borrowedBooklist += `${book.title}\n`;
+            }
+
+            const totalBorrowedBooks = person1.borrowedBooks.length;
+            alert(`You borrowed ${totalBorrowedBooks} books(s):\n\n${borrowedBooklist}`);
+
+        }
+
+    </script>
+</head>
+<body>
+    
+</body>
+</html>
